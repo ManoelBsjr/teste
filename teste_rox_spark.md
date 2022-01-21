@@ -10,7 +10,7 @@ from pyspark.sql.types import StructType, StructField, StringType, FloatType
 from pyspark.sql.functions import concat, lit, col
 from pyspark.sql.functions import *
 
-#declarando funçoes para o spark e sql
+##criando funçoes para o spark e sql
 
 def cria_contexto_spark():
     global APP_NAME
@@ -26,13 +26,10 @@ sc = cria_contexto_spark()
 spark = cria_contexto_sql(sc)
 ```
 
-    C:\spark\spark\python\pyspark\sql\context.py:77: FutureWarning: Deprecated in 3.0.0. Use SparkSession.builder.getOrCreate() instead.
-      warnings.warn(
-    
 
 
 ```python
-#Datasets
+##Datasets
 df_person_person = spark.read.csv("C:\\Users\manoe\\OneDrive\\Área de Trabalho\\TesteRox\\Engenheiro de Dados - CSV\\Person.Person.csv", sep=';', header="true")
 df_production_product = spark.read.csv("C:\\Users\manoe\\OneDrive\\Área de Trabalho\\TesteRox\\Engenheiro de Dados - CSV\\Production.Product.csv", sep=';', header="true")
 df_sales_customer = spark.read.csv("C:\\Users\manoe\\OneDrive\\Área de Trabalho\\TesteRox\\Engenheiro de Dados - CSV\\Sales.Customer.csv", sep=';', header="true")
@@ -41,24 +38,25 @@ df_sales_header = spark.read.csv("C:\\Users\manoe\\OneDrive\\Área de Trabalho\\
 df_sales_special_offer = spark.read.csv("C:\\Users\manoe\\OneDrive\\Área de Trabalho\\TesteRox\\Engenheiro de Dados - CSV\\Sales.SpecialOfferProduct.csv", sep=';', header="true")
 ```
 
-### Ítem 1 ###
+# Ítem 1 
 
-
+Após um printSchema, percebe-se que todas as colunas estão definidas como String Converter para Integer a
+coluna "SalesOrderDetailID" para tornar possivel operaçoes numéricas
 ```python
-#Após um printSchema, percebe-se que todas as colunas estão definidas como String
-#Converter para Integer a coluna "SalesOrderDetailID" para tornar possivel operaçoes matemáticas
 df_sales_detail = df_sales_detail.withColumn("SalesOrderDetailID", df_sales_detail.SalesOrderDetailID.cast('integer'))
-
-#Registrar como Tabela para executar comandos SQL
+```
+Registrar como Tabela para executar comandos SQL
+```python
 spark.registerDataFrameAsTable(df_sales_detail, "df_sales_detail")
-
-#Consulta em SQL a quantidade de números distintos de SalesOrderID onde a coluna SalesOrderDetailID seja maior ou igual a 3.
+```
+Consulta em SQL a quantidade de números distintos de SalesOrderID onde a coluna SalesOrderDetailID seja maior ou igual a 3.
+```python
 df_qtd_salesorderid_distincts = spark.sql("""SELECT
                 count(distinct SalesOrderID) AS Qtd_SalesOrderID_Distintos
             FROM df_sales_detail
             WHERE SalesOrderDetailID >= 3
             """)
-#Path para salvar
+###Path para salvar
 df_qtd_salesorderid_distincts.write.format("csv").option("header", "true").save("C:\\Users\\manoe\\OneDrive\\Área de Trabalho\\\EngDados\\roxpartner\\tb_item1.csv",sep="|", encoding="utf-8")
 ```
 
@@ -75,19 +73,18 @@ df_qtd_salesorderid_distincts.show()
     
     
 
-### Ítem 2 ###
+# Ítem 2 
 
 
+Passo 1:
+Registrar DF´s como tabela para executar Queries em SQL
 ```python
-#Passo 1:
-
-##Registrar DF´s como tabela para executar Queries em SQL
 spark.registerDataFrameAsTable(df_sales_special_offer, "df_sales_special_offer")
 spark.registerDataFrameAsTable(df_production_product, "df_production_product")
-
-#Primeiro passo Pegar os ProductID em ofertas e acrescentar a coluna "Name" e "DaysToManufacture" 
-#através de um Left Join com a tabela df_production_product com estratégia => a.ProductID = b.ProductID
-
+```
+Pegar os ProductID em ofertas e acrescentar a coluna "Name" e "DaysToManufacture" 
+através de um Left Join com a tabela df_production_product com estratégia => a.ProductID = b.ProductID
+```python
 df_sales_offer_names = spark.sql("""SELECT 
         b.Name, 
         b.DaysToManufacture,
@@ -96,15 +93,16 @@ df_sales_offer_names = spark.sql("""SELECT
     LEFT JOIN df_production_product AS b
     ON a.ProductID = b.ProductID
     """)
-
-###Registrar novamente o DF como tabela para executar Queries em SQL
+```
+Registrar novamente o DF como tabela para executar Queries em SQL
+```python
 spark.registerDataFrameAsTable(df_sales_offer_names, "df_sales_offer_names")
 ```
 
 
 ```python
 df_sales_offer_names.show()
-```
+
 
     +--------------------+-----------------+---------+
     |                Name|DaysToManufacture|ProductID|
@@ -135,16 +133,18 @@ df_sales_offer_names.show()
     
 
 
+```
+Passo 2:
+converter a coluna OrderQty para int para posteriormente usar operaçao para somar 
 ```python
-#Passo 2:
-
-#converter a coluna OrderQty para int para posteriormente usar operaçao para somar 
 df_sales_detail = df_sales_detail.withColumn("OrderQty", df_sales_detail.OrderQty.cast('integer'))
-
-#Registrar como tabela para executar Queries em SQL
+```
+Registrar como tabela para executar Queries em SQL
+```python
 spark.registerDataFrameAsTable(df_sales_detail, "df_sales_detail")
-
-# top 3 de ProductID com maiores números de OrderQty
+```
+top 3 de ProductID com maiores números de OrderQty
+```python
 df_top3_orderQty = spark.sql("""SELECT 
         ProductID,
         SUM(OrderQty) as Total_OrderQty
@@ -158,7 +158,7 @@ spark.registerDataFrameAsTable(df_top3_orderQty, "df_top3_orderQty")
 
 ```python
 df_top3_orderQty.show()
-```
+
 
     +---------+--------------+
     |ProductID|Total_OrderQty|
@@ -168,15 +168,15 @@ df_top3_orderQty.show()
     |      711|          6743|
     +---------+--------------+
     
-    
+```    
 
+
+Passo3: 
+Selectionar as colunas "Name" e "DaysToManufacture" da tabela df_sales_offer_names 
+Juntar com a coluna "Total_OrderQty" da tabela df_top3_orderQty por meio de um Left Join onde "a.ProductID = b.ProductID"
+Para retornar os 3 produtos com maior "Total_OrderQty"
 
 ```python
-#Passo3: Selectionar as colunas "Name" e "DaysToManufacture" da tabela df_sales_offer_names 
-#Juntar com a coluna "Total_OrderQty" da tabela df_top3_orderQty por meio de um Left Join onde "a.ProductID = b.ProductID"
-#Para retornar os 3 produtos com maior "Total_OrderQty"
-
-
 df_products_top3 = spark.sql("""SELECT 
         b.Name,
         b.DaysToManufacture,
@@ -187,14 +187,15 @@ df_products_top3 = spark.sql("""SELECT
     GROUP BY Name, DaysToManufacture, Total_OrderQty
     ORDER BY Total_OrderQty DESC
     """)
-
+```
+path para salvar o df
+```python
 df_products_top3.write.format("csv").option("header", "true").save("C:\\Users\\manoe\\OneDrive\\Área de Trabalho\\\EngDados\\roxpartner\\tb_item2.csv",sep="|", encoding="utf-8")
 ```
 
 
 ```python
 df_products_top3.show(truncate = False)
-```
 
     +----------------------+-----------------+--------------+
     |Name                  |DaysToManufacture|Total_OrderQty|
@@ -204,23 +205,21 @@ df_products_top3.show(truncate = False)
     |Sport-100 Helmet, Blue|0                |6743          |
     +----------------------+-----------------+--------------+
     
-    
+ ```
 
-### Ítem 3 ###
+# Ítem 3 
 
 
+
+Passo 1:
+Registrar DF´s como tabela para executar Queries em SQL
 ```python
-#Passo 1:
-
-##Registrar DF´s como tabela para executar Queries em SQL
 spark.registerDataFrameAsTable(df_person_person, "df_person_person")
 spark.registerDataFrameAsTable(df_sales_customer, "df_sales_customer")
 spark.registerDataFrameAsTable(df_sales_header, "df_sales_header")
 ```
-
-
+Considerando que BussinessEntityID do df_person_person é igual a CustomerID do df_sales_customer
 ```python
-#Passo 2:
 df_name_id = spark.sql("""SELECT 
         a.FirstName,
         a.MiddleName,
@@ -230,13 +229,14 @@ df_name_id = spark.sql("""SELECT
     LEFT JOIN df_person_person AS a
     ON a.BusinessEntityID = b.CustomerID
     """)
-
+```
+Registrar o df como tabela para executar Queries em SQL
+```python
 spark.registerDataFrameAsTable(df_name_id, "df_name_id")
 ```
 
 
 ```python
-#Passo 3:
 df_sell = spark.sql("""SELECT 
         a.FirstName,
         a.MiddleName,
@@ -247,15 +247,25 @@ df_sell = spark.sql("""SELECT
     ON a.CustomerID = b.CustomerID
     WHERE FirstName is not Null
     """)
-
-#concatenar as colunas"FirstName","MiddleName","LastName" para gerar uma nova coluna "ClientName" 
-# e dropo as colunas antigas.
+    
+```
+concatenar as colunas"FirstName","MiddleName","LastName" para gerar uma nova coluna "ClientName" 
+e dropo as colunas antigas.
+```python
 df1 = df_sell.select("*", concat(col("FirstName"),lit(" "),col("MiddleName")).alias("New_col"))
 df1 = df1.select("*", concat(col("New_col"),lit(" "),col("LastName")).alias("ClientName"))
+```python
+Dropando as colunas antigas
+```
 df1 = df1.drop("FirstName","MiddleName","LastName","New_col")
-df_sell_final = df1.withColumn('ClientName', regexp_replace('ClientName', 'NULL', '')) #Remove os MiddleName "NULL"
+```
+Remove os MiddleName "NULL" e troca por '' (espaço vazio)
+```python
+df_sell_final = df1.withColumn('ClientName', regexp_replace('ClientName', 'NULL', ''))
 spark.registerDataFrameAsTable(df_sell_final, "df_sell_final")
-
+```
+adquirindo as SalesOrderID diferentes e armazenando em Qtd_SalesOrderID.
+```python
 df_sell_final = spark.sql("""SELECT 
         ClientName,
         COUNT(Distinct SalesOrderID) AS Qtd_SalesOrderID
