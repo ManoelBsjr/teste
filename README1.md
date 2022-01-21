@@ -12,6 +12,11 @@
     * [Item 4](#Item-4)
     * [Item 5](#Item-5)
   * [Cloud Function GCP](#Cloud-Function-GCP)
+    * Cloud Storage
+    * Cloud Scheduler
+    * Pub/Sub
+    * Cloud Function
+    * BigQuery)
   * [Dataviz](https://datastudio.google.com/reporting/d12b4848-20ef-4386-8a28-5880ab9d54cf/page/myyMC) 
 <!--te-->
 
