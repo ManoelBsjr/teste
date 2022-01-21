@@ -12,11 +12,11 @@
     * [Item 4](#Item-4)
     * [Item 5](#Item-5)
   * [Cloud Function GCP](#Cloud-Function-GCP)
-    * Cloud Storage
-    * Cloud Scheduler
-    * Pub/Sub
-    * Cloud Function
-    * BigQuery)
+    * [Cloud Function]
+    * [Cloud Storage](#Cloud-Storage)
+    * [Cloud Scheduler](#Cloud-Scheduler)
+    * [Pub/Sub](#Pub/Sub)
+    * [BigQuery](#BigQuery)
   * [Dataviz](https://datastudio.google.com/reporting/d12b4848-20ef-4386-8a28-5880ab9d54cf/page/myyMC) 
 <!--te-->
 
@@ -654,6 +654,20 @@ Deletando colunas dos DF's para nao dar append
     except Exception as e:
         print(e)
 ```
+### Cloud Function
+![CloudFunctions](https://user-images.githubusercontent.com/97997051/150527518-761262db-f9ba-4809-99d4-b7936020e042.jpeg)
+
+### Cloud Storage
+![Storage](https://user-images.githubusercontent.com/97997051/150527579-f3b8092b-2fdd-43a4-873a-aaa3fdce0a1c.jpeg)
+
+### Cloud Scheduler
+![CloudScheduler](https://user-images.githubusercontent.com/97997051/150527627-d87fe9c3-bf9d-42df-a565-e72647f73458.jpeg)
+
+### Pub/Sub
+![PubSub](https://user-images.githubusercontent.com/97997051/150527662-9f3a7d8d-edf1-440b-85cb-a73c62c880c7.jpeg)
+
+### BigQuery
+![BigQuery](https://user-images.githubusercontent.com/97997051/150527784-9723b902-e63b-459f-9f13-4de5e3123f2c.jpeg)
 
 ### Dataviz
 ![image](https://user-images.githubusercontent.com/97997051/150480262-ca839553-ae16-43e0-a446-d74de79d08e7.png)
