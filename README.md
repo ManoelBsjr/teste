@@ -11,8 +11,8 @@
     * [Item 3](#Item-3)
     * [Item 4](#Item-4)
     * [Item 5](#Item-5)
-  * [Cloud Function GCP](#Cloud-Function-GCP)
-    * [Cloud Function]
+  * [GCP]
+    * [Cloud Function](#Cloud-Function-GCP)
     * [Cloud Storage](#Cloud-Storage)
     * [Cloud Scheduler](#Cloud-Scheduler)
     * [Pub/Sub](#Pub/Sub)
@@ -66,7 +66,7 @@ spark = cria_contexto_sql(sc)
 ```
 
 
-##Datasets
+#Dataset
 ```python
 df_person_person = spark.read.csv("C:\\Users\manoe\\OneDrive\\Área de Trabalho\\TesteRox\\Engenheiro de Dados - CSV\\Person.Person.csv", sep=';', header="true")
 df_production_product = spark.read.csv("C:\\Users\manoe\\OneDrive\\Área de Trabalho\\TesteRox\\Engenheiro de Dados - CSV\\Production.Product.csv", sep=';', header="true")
@@ -549,7 +549,7 @@ Iniciando os services storage e bq
         storage_client = storage.Client()
         client = bigquery.Client()
 ```
-Deletando colunas dos DF's para nao dar append
+Deletando linhas tabela para nao dar append
 ```python
         tables_list = tb_SalesOrderID_Distintos+","+tb_products_top3+","+tb_sells+","+tb_produtos_dia+","+tb_due_september
         for tb in tables_list.split(","):
