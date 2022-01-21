@@ -549,7 +549,7 @@ Iniciando os services storage e bq
         storage_client = storage.Client()
         client = bigquery.Client()
 ```
-Deletando linhas da tabela para nao dar append
+Deletando linhas das tabelas para não gerar duplicidade
 ```python
         tables_list = tb_SalesOrderID_Distintos+","+tb_products_top3+","+tb_sells+","+tb_produtos_dia+","+tb_due_september
         for tb in tables_list.split(","):
