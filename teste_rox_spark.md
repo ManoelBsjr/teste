@@ -1,3 +1,38 @@
+# Rox Partner
+## Solução dos itens para os dados de uma empresa que produz bicicletas
+### Tabela de conteúdos
+=================
+<!--ts-->
+  * [Tecnologias utilizadas](#Tecnologias)
+  * [Arquitetura GCP](#Arquitetura-GCP)
+  * [Análise dos dados](#Análise-dos-dados)
+    * [Item 1](#Item-1)
+    * [Item 2](#Item-2)
+    * [Item 3](#Item-3)
+    * [Item 4](#Item-4)
+    * [Item 5](#Item-5)
+  * [Cloud Function GCP](#Cloud Function GCP)
+  * [Dataviz](#Dataviz) 
+<!--te-->
+
+### Tecnologias
+
+As seguintes ferramentas foram usadas na resolução dos questionamentos:
+
+- [Java](https://www.java.com/)
+- [Jupyter](https://jupyter.org/)
+- [Anaconda](https://www.anaconda.com/products/individual)
+- [Apache Spark](https://spark.apache.org/)
+- [WinUtils](https://github.com/steveloughran/winutils)
+- [Drawio](https://drawio-app.com/)
+- [Google Cloud Platform](https://cloud.google.com/)
+- [Data Studio](https://datastudio.google.com/)
+
+### Arquitetura GCP
+
+![teste_rox_draw](https://user-images.githubusercontent.com/97997051/150478032-b8594496-e520-43ec-a7b2-d00b88ae03f6.jpeg)
+
+### Análise dos dados
 ```python
 # -*- coding:utf-8 -*-
 from datetime import datetime, timedelta, date
@@ -27,9 +62,8 @@ spark = cria_contexto_sql(sc)
 ```
 
 
-
-```python
 ##Datasets
+```python
 df_person_person = spark.read.csv("C:\\Users\manoe\\OneDrive\\Área de Trabalho\\TesteRox\\Engenheiro de Dados - CSV\\Person.Person.csv", sep=';', header="true")
 df_production_product = spark.read.csv("C:\\Users\manoe\\OneDrive\\Área de Trabalho\\TesteRox\\Engenheiro de Dados - CSV\\Production.Product.csv", sep=';', header="true")
 df_sales_customer = spark.read.csv("C:\\Users\manoe\\OneDrive\\Área de Trabalho\\TesteRox\\Engenheiro de Dados - CSV\\Sales.Customer.csv", sep=';', header="true")
@@ -38,14 +72,14 @@ df_sales_header = spark.read.csv("C:\\Users\manoe\\OneDrive\\Área de Trabalho\\
 df_sales_special_offer = spark.read.csv("C:\\Users\manoe\\OneDrive\\Área de Trabalho\\TesteRox\\Engenheiro de Dados - CSV\\Sales.SpecialOfferProduct.csv", sep=';', header="true")
 ```
 
-# Ítem 1 
-
+# Item 1
+### 1.	Escreva uma query que retorna a quantidade de linhas na tabela Sales.SalesOrderDetail pelo campo SalesOrderID, desde que tenham pelo menos três linhas de detalhes.
 Após um printSchema, percebe-se que todas as colunas estão definidas como String. 
 Converter para Integer a coluna "SalesOrderDetailID" para tornar possivel operaçoes numéricas
 ```python
 df_sales_detail = df_sales_detail.withColumn("SalesOrderDetailID", df_sales_detail.SalesOrderDetailID.cast('integer'))
 ```
-Registrar como Tabela para executar comandos SQL
+Registrar como tabela para executar Queries em SQL
 ```python
 spark.registerDataFrameAsTable(df_sales_detail, "df_sales_detail")
 ```
@@ -73,8 +107,8 @@ df_qtd_salesorderid_distincts.show()
     +--------------------------+
     
 ```
-# Ítem 2 
-
+# Item 2 
+### 2.	Escreva uma query que ligue as tabelas Sales.SalesOrderDetail, Sales.SpecialOfferProduct e Production.Product e retorne os 3 produtos (Name) mais vendidos (pela soma de OrderQty), agrupados pelo número de dias para manufatura (DaysToManufacture).
 Passo 1:
 Registrar DF´s como tabela para executar Queries em SQL
 ```python
@@ -204,8 +238,8 @@ df_products_top3.show(truncate = False)
     
  ```
 
-# Ítem 3 
-
+# Item 3 
+### 3.	Escreva uma query ligando as tabelas Person.Person, Sales.Customer e Sales.SalesOrderHeader de forma a obter uma lista de nomes de clientes e uma contagem de pedidos efetuados.
 
 
 Passo 1:
@@ -297,8 +331,8 @@ df_sell_final.show(10)
     
 ```    
 
-# Ítem 4 
-
+# Item 4 
+### 4.	Escreva uma query usando as tabelas Sales.SalesOrderHeader, Sales.SalesOrderDetail e Production.Product, de forma a obter a soma total de produtos (OrderQty) por ProductID e OrderDate.
 
 passando o DataType da coluna OrderDate de String para Date
 ```python
@@ -400,8 +434,8 @@ df_produtos_dia.show()
     
 ```    
 
-# Ítem 5
-
+# Item 5
+### 5.	Escreva uma query mostrando os campos SalesOrderID, OrderDate e TotalDue da tabela Sales.SalesOrderHeader. Obtenha apenas as linhas onde a ordem tenha sido feita durante o mês de setembro/2011 e o total devido esteja acima de 1.000. Ordene pelo total devido decrescente.
 
 ```python
 df_sales_header = df_sales_header.withColumn("SalesOrderID",df_sales_header["SalesOrderID"].cast("integer"))
@@ -423,7 +457,7 @@ df_due_september = spark.sql("""SELECT
         TotalDue
     FROM df_sales_header 
     WHERE (OrderDate BETWEEN '2011-09-01'AND '2011-09-30') AND TotalDue > 1000
-    ORDER BY SalesOrderID, OrderDate, TotalDue
+    ORDER BY TotalDue DESC
     
         """)
 df_due_september.write.format("csv").option("header", "true").save("C:\\Users\\manoe\\OneDrive\\Área de Trabalho\\\EngDados\\roxpartner\\tb_item5.csv",sep="|", encoding="utf-8")
@@ -433,31 +467,32 @@ df_due_september.write.format("csv").option("header", "true").save("C:\\Users\\m
 ```python
 df_due_september.show()
 
-    +------------+----------+---------+
-    |SalesOrderID| OrderDate| TotalDue|
-    +------------+----------+---------+
-    |       44324|2011-09-01|3953.9883|
-    |       44325|2011-09-01| 3729.364|
-    |       44326|2011-09-01|3953.9883|
-    |       44327|2011-09-02|3953.9883|
-    |       44328|2011-09-02|3953.9883|
-    |       44329|2011-09-02|3953.9883|
-    |       44330|2011-09-02|3953.9883|
-    |       44331|2011-09-03|3953.9883|
-    |       44332|2011-09-03|3953.9883|
-    |       44333|2011-09-04| 3756.989|
-    |       44334|2011-09-04|3953.9883|
-    |       44336|2011-09-04| 3756.989|
-    |       44337|2011-09-04| 3729.364|
-    |       44338|2011-09-04|3953.9883|
-    |       44339|2011-09-04|3953.9883|
-    |       44340|2011-09-04|3953.9883|
-    |       44341|2011-09-05| 3729.364|
-    |       44343|2011-09-05|3953.9883|
-    |       44344|2011-09-06|3953.9883|
-    |       44345|2011-09-06|3953.9883|
-    +------------+----------+---------+
-    only showing top 20 rows
+   +------------+----------+---------+
+   |SalesOrderID| OrderDate| TotalDue|
+   +------------+----------+---------+
+   |       44348|2011-09-07|3953.9883|
+   |       44372|2011-09-09|3953.9883|
+   |       44349|2011-09-07|3953.9883|
+   |       44350|2011-09-07|3953.9883|
+   |       44371|2011-09-09|3953.9883|
+   |       44351|2011-09-07|3953.9883|
+   |       44328|2011-09-02|3953.9883|
+   |       44352|2011-09-07|3953.9883|
+   |       44330|2011-09-02|3953.9883|
+   |       44332|2011-09-03|3953.9883|
+   |       44370|2011-09-09|3953.9883|
+   |       44357|2011-09-07|3953.9883|
+   |       44338|2011-09-04|3953.9883|
+   |       44358|2011-09-07|3953.9883|
+   |       44340|2011-09-04|3953.9883|
+   |       44359|2011-09-08|3953.9883|
+   |       44344|2011-09-06|3953.9883|
+   |       44360|2011-09-08|3953.9883|
+   |       44347|2011-09-06|3953.9883|
+   |       44361|2011-09-08|3953.9883|
+   +------------+----------+---------+
+   only showing top 20 rows
+
     
     
 ```
@@ -465,3 +500,157 @@ df_due_september.show()
 ```python
 
 ```
+### Cloud Function GCP
+
+```python
+#from google.cloud import dataproc_v1
+import base64
+import json
+from google.cloud import storage
+from google.cloud import bigquery
+import pandas as pd
+import os
+os.system('ls -l')
+
+def instantiate_workflow_template(event, context):
+
+    try:
+        #Parâmetros recebidos pelo pub/sub
+        pubsub_message = json.loads(base64.b64decode(event['data']).decode('utf-8'))
+        project_id = pubsub_message['project_id']
+        region = pubsub_message['region']
+        workflow_template = pubsub_message['workflow_template']
+        parameters = pubsub_message['parameters']
+```
+Paths dos DF's no google storage e no big query
+```python
+        #1) CONSTANTES
+        path_tb_SalesOrderID_Distintos = "gs://big-data-demonstration.appspot.com/RoxPartner/work/sells/tb_item1.csv/part-00000-62b3f23f-2d33-4d52-ad96-04786d8dc080-c000.csv"
+        tb_SalesOrderID_Distintos = "RoxPartner.tb_SalesOrderID_Distintos"
+
+        path_tb_products_top3 = "gs://big-data-demonstration.appspot.com/RoxPartner/work/sells/tb_item2.csv/part-00000-4d4a7dd2-e9d0-40bd-95f5-275926f8f3ab-c000.csv"
+        tb_products_top3 = "RoxPartner.tb_products_top3"
+
+        path_tb_sells = "gs://big-data-demonstration.appspot.com/RoxPartner/work/sells/tb_item3.csv/part-00000-f56d5ab1-cdfa-4b1b-a6df-7778ce7f60da-c000.csv"
+        tb_sells = "RoxPartner.tb_sell_final"
+
+        path_tb_produtos_dia = "gs://big-data-demonstration.appspot.com/RoxPartner/work/sells/tb_item4.csv/part-00000-d2a694a5-d5ef-4a03-95db-5ea93aeed62f-c000.csv"
+        tb_produtos_dia = "RoxPartner.tb_produtos_dia"
+
+        path_tb_due_september = "gs://big-data-demonstration.appspot.com/RoxPartner/work/sells/tb_item5.csv/part-00000-d68a1f01-095c-4814-a047-46928b4fec23-c000.csv"
+        tb_due_september = "RoxPartner.tb_due_september"     
+```
+Iniciando os services storage e bq
+```python
+        storage_client = storage.Client()
+        client = bigquery.Client()
+```
+Deletando colunas dos DF's para nao dar append
+```python
+        tables_list = tb_SalesOrderID_Distintos+","+tb_products_top3+","+tb_sells+","+tb_produtos_dia+","+tb_due_september
+        for tb in tables_list.split(","):
+            QUERY = """DELETE FROM `big-data-demonstration."""+tb+"""` WHERE 1=1"""
+            query_job = client.query(QUERY)
+            query_job.result()
+```
+ Load CSV do storage para o big query
+```python
+```
+ tb_SalesOrderID_Distintos. passando schema, csv, delimitador "|"
+```python        
+        job_config = bigquery.LoadJobConfig(
+            schema=[
+                bigquery.SchemaField("Qtd_SalesOrderID_Distintos", "INTEGER")
+            ],
+            skip_leading_rows=1,
+            source_format=bigquery.SourceFormat.CSV,
+            field_delimiter="|",
+        )
+        load_job = client.load_table_from_uri(
+            path_tb_SalesOrderID_Distintos, tb_SalesOrderID_Distintos, job_config=job_config
+        )
+        load_job.result()  # Waits for the job to complete.
+        destination_table = client.get_table(tb_SalesOrderID_Distintos)  # Make an API request.
+        print("Loaded {} rows.".format(destination_table.num_rows))
+ ```
+ tb_products_top3
+ ```python
+        job_config = bigquery.LoadJobConfig(
+            schema=[
+                bigquery.SchemaField("Name", "STRING"),
+                bigquery.SchemaField("DaysToManufacture","INTEGER"),
+                bigquery.SchemaField("Total_OrderQty", "INTEGER")
+            ],skip_leading_rows=1,
+            source_format=bigquery.SourceFormat.CSV,
+            field_delimiter="|",
+        )
+        load_job = client.load_table_from_uri(
+            path_tb_products_top3, tb_products_top3, job_config=job_config
+        )
+        load_job.result() # Waits for the job to complete.
+        destination_table = client.get_table(tb_products_top3)
+        print("Loaded {} rows".format(destination_table.num_rows))
+ ```       
+   tb_sells
+ ```python
+        job_config = bigquery.LoadJobConfig(
+            schema=[
+                bigquery.SchemaField("ClientName", "STRING"),
+                bigquery.SchemaField("Qtd_SalesOrderID", "INTEGER")
+            ],
+            skip_leading_rows=1,
+            source_format=bigquery.SourceFormat.CSV,
+            field_delimiter="|",
+        )
+        load_job = client.load_table_from_uri(
+            path_tb_sells, tb_sells, job_config=job_config
+        )
+        load_job.result()  # Waits for the job to complete.
+        destination_table = client.get_table(tb_sells)  # Make an API request.
+        print("Loaded {} rows.".format(destination_table.num_rows))
+  ```      
+   tb_produtos_dia
+  ```python
+        job_config = bigquery.LoadJobConfig(
+            schema=[
+                bigquery.SchemaField("ProductID", "INTEGER"),
+                bigquery.SchemaField("OrderDate", "DATE"),
+                bigquery.SchemaField("total_OrderQty", "INTEGER")
+            ],
+            skip_leading_rows=1,
+            source_format=bigquery.SourceFormat.CSV,
+            field_delimiter="|",
+        )
+        load_job = client.load_table_from_uri(
+            path_tb_produtos_dia, tb_produtos_dia, job_config=job_config
+        )
+        load_job.result()  # Waits for the job to complete.
+        destination_table = client.get_table(tb_produtos_dia)  # Make an API request.
+        print("Loaded {} rows.".format(destination_table.num_rows))
+  ```      
+   tb_due_september
+  ```python
+        job_config = bigquery.LoadJobConfig(
+            schema=[
+                bigquery.SchemaField("SalesOrderID", "INTEGER"),
+                bigquery.SchemaField("OrderDate", "DATE"),
+                bigquery.SchemaField("TotalDue", "FLOAT")
+            ],
+            skip_leading_rows=1,
+            source_format=bigquery.SourceFormat.CSV,
+            field_delimiter="|",
+        )
+        load_job = client.load_table_from_uri(
+            path_tb_due_september, tb_due_september, job_config=job_config
+        )
+        load_job.result()  # Waits for the job to complete.
+        destination_table = client.get_table(tb_due_september)  # Make an API request.
+        print("Loaded {} rows.".format(destination_table.num_rows))
+        print("Sucesso!")
+    except Exception as e:
+        print(e)
+```
+
+### Dataviz
+![image](https://user-images.githubusercontent.com/97997051/150480262-ca839553-ae16-43e0-a446-d74de79d08e7.png)
+
