@@ -254,12 +254,12 @@ e dropo as colunas antigas.
 ```python
 df1 = df_sell.select("*", concat(col("FirstName"),lit(" "),col("MiddleName")).alias("New_col"))
 df1 = df1.select("*", concat(col("New_col"),lit(" "),col("LastName")).alias("ClientName"))
-```python
-Dropando as colunas antigas
 ```
+Dropando as colunas antigas
+```python
 df1 = df1.drop("FirstName","MiddleName","LastName","New_col")
 ```
-Remove os MiddleName "NULL" e troca por '' (espaço vazio)
+Remove os MiddleName "NULL" e troca por '' (espaço vazio) e Registrar DF como tabela para executar Queries em SQL
 ```python
 df_sell_final = df1.withColumn('ClientName', regexp_replace('ClientName', 'NULL', ''))
 spark.registerDataFrameAsTable(df_sell_final, "df_sell_final")
@@ -280,7 +280,7 @@ df_sell_final.write.format("csv").option("header", "true").save("C:\\Users\\mano
 
 ```python
 df_sell_final.show(10)
-```
+
 
     +----------------+----------------+
     |      ClientName|Qtd_SalesOrderID|
@@ -298,25 +298,32 @@ df_sell_final.show(10)
     +----------------+----------------+
     only showing top 10 rows
     
-    
+```    
 
-### Ítem 4 ###
+# Ítem 4 
 
 
+passando o DataType da coluna OrderDate de String para Date
 ```python
 df_sales_header = df_sales_header.withColumn("OrderDate", df_sales_header["OrderDate"].cast("date"))
+```
+passando o DataType da coluna OrderQty de String para integer
+```python
 df_sales_detail = df_sales_detail.withColumn("OrderQty",df_sales_detail.OrderQty.cast("integer"))
+```
+passando o DataType da coluna ProductID de String para integer
+```python
 df_sales_detail = df_sales_detail.withColumn("ProductID",df_sales_detail["ProductID"].cast("integer"))
-
-#Registra como tabela para executar Queries em sql
+```
+Registra como tabela para executar Queries em sql
+```python
 spark.registerDataFrameAsTable(df_sales_header,"df_sales_header")
 spark.registerDataFrameAsTable(df_sales_detail,"df_sales_detail")
 spark.registerDataFrameAsTable(df_production_product,"df_production_product")
 ```
 
-
+Fazer um join através da coluna em comum da df_sales_detail e df_sales_header, no caso a coluna "SalesOrderID"
 ```python
-
 #df_sales_detail >>> SalesOrderID  OrderQty ProductID 
 #df_sales_header >>> SalesOrderID  OrderDate
 #df_production_pr>>>                        ProductID
@@ -329,14 +336,15 @@ df_total_produtos = spark.sql("""SELECT
     LEFT JOIN df_sales_header AS b
     ON a.SalesOrderID = b.SalesOrderID
     """)
-
+```
+Registra como tabela para executar Queries em sql
+```python
 spark.registerDataFrameAsTable(df_total_produtos,"df_total_produtos")
 ```
 
 
 ```python
 df_total_produtos.show(1)
-```
 
     +------------+--------+----------+---------+
     |SalesOrderID|OrderQty| OrderDate|ProductID|
@@ -345,9 +353,9 @@ df_total_produtos.show(1)
     +------------+--------+----------+---------+
     only showing top 1 row
     
-    
+```    
 
-
+Fazer um join através da coluna ProductID dos df_total_produtos e df_production_product
 ```python
 df_produtos_dia = spark.sql("""SELECT
         b.ProductID,
@@ -366,7 +374,6 @@ df_produtos_dia.write.format("csv").option("header", "true").save("C:\\Users\\ma
 
 ```python
 df_produtos_dia.show()
-```
 
     +---------+----------+--------------+
     |ProductID| OrderDate|total_OrderQty|
@@ -394,33 +401,23 @@ df_produtos_dia.show()
     +---------+----------+--------------+
     only showing top 20 rows
     
-    
+```    
 
-### Ítem 5 ###
-
-
-```python
-df_sales_header.count()   # SalesOrderID  OrderDate  TotalDue
-```
-
-
-
-
-    31465
-
-
+# Ítem 5
 
 
 ```python
 df_sales_header = df_sales_header.withColumn("SalesOrderID",df_sales_header["SalesOrderID"].cast("integer"))
 df_sales_header = df_sales_header.withColumn("OrderDate",df_sales_header.OrderDate.cast("date"))
-
-#Substituindo as "," da TotalDue por "."  , pra poder manipular em float
+```
+#Substituindo as "," (vírgulas) da TotalDue por "." (ponto), para ser possivel passar o DataType para float
+```python
 df_sales_header = df_sales_header.withColumn('TotalDue', regexp_replace('TotalDue', ',', '.'))
 df_sales_header = df_sales_header.withColumn("TotalDue",df_sales_header["TotalDue"].cast("float"))
 spark.registerDataFrameAsTable(df_sales_header,"df_sales_header")
 ```
 
+Pegando o range de datas (OderDate) entre 01/setembro/2011 e 30/setembro/2011, com "TotalDue" superior a 1000
 
 ```python
 df_due_september = spark.sql("""SELECT
@@ -438,7 +435,6 @@ df_due_september.write.format("csv").option("header", "true").save("C:\\Users\\m
 
 ```python
 df_due_september.show()
-```
 
     +------------+----------+---------+
     |SalesOrderID| OrderDate| TotalDue|
@@ -467,7 +463,7 @@ df_due_september.show()
     only showing top 20 rows
     
     
-
+```
 
 ```python
 
