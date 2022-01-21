@@ -549,7 +549,7 @@ Iniciando os services storage e bq
         storage_client = storage.Client()
         client = bigquery.Client()
 ```
-Deletando linhas tabela para nao dar append
+Deletando linhas da tabela para nao dar append
 ```python
         tables_list = tb_SalesOrderID_Distintos+","+tb_products_top3+","+tb_sells+","+tb_produtos_dia+","+tb_due_september
         for tb in tables_list.split(","):
@@ -671,4 +671,7 @@ Deletando linhas tabela para nao dar append
 
 ### Dataviz
 ![image](https://user-images.githubusercontent.com/97997051/150480262-ca839553-ae16-43e0-a446-d74de79d08e7.png)
+
+![DatavizRox](https://user-images.githubusercontent.com/97997051/150529554-05429dbb-3106-4502-81fd-b568f2d02644.PNG)
+
 
