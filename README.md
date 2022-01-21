@@ -12,7 +12,7 @@
     * [Item 4](#Item-4)
     * [Item 5](#Item-5)
   * [GCP]
-    * [Cloud Function](#Cloud-Function-GCP)
+    * [Cloud Function](#Cloud-Function)
     * [Cloud Storage](#Cloud-Storage)
     * [Cloud Scheduler](#Cloud-Scheduler)
     * [Pub/Sub](#Pub/Sub)
@@ -504,7 +504,7 @@ df_due_september.show()
 ```python
 
 ```
-### Cloud Function GCP
+### Cloud Function
 
 ```python
 #from google.cloud import dataproc_v1
@@ -654,7 +654,7 @@ Deletando linhas tabela para nao dar append
     except Exception as e:
         print(e)
 ```
-### Cloud Function
+
 ![CloudFunctions](https://user-images.githubusercontent.com/97997051/150527518-761262db-f9ba-4809-99d4-b7936020e042.jpeg)
 
 ### Cloud Storage
