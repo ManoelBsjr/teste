@@ -12,21 +12,20 @@
     * [Item 4](#Item-4)
     * [Item 5](#Item-5)
   * [Cloud Function GCP](#Cloud-Function-GCP)
-  * [Dataviz](#Dataviz) 
+  * [Dataviz](https://datastudio.google.com/reporting/d12b4848-20ef-4386-8a28-5880ab9d54cf/page/myyMC) 
 <!--te-->
 
 ### Tecnologias
 
 As seguintes ferramentas foram usadas na resolução dos questionamentos:
 
-- [Java](https://www.java.com/)
-- [Jupyter](https://jupyter.org/)
-- [Anaconda](https://www.anaconda.com/products/individual)
-- [Apache Spark](https://spark.apache.org/)
-- [WinUtils](https://github.com/steveloughran/winutils)
-- [Drawio](https://drawio-app.com/)
-- [Google Cloud Platform](https://cloud.google.com/)
-- [Data Studio](https://datastudio.google.com/)
+- Jupyter
+- Anaconda
+- Apache Spark (Pyspark)
+- Python
+- Drawio
+- Google Cloud Platform
+- Data Studio
 
 ### Arquitetura GCP
 
