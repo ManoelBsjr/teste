@@ -672,6 +672,6 @@ Deletando linhas da tabela para nao dar append
 ### Dataviz
 ![image](https://user-images.githubusercontent.com/97997051/150480262-ca839553-ae16-43e0-a446-d74de79d08e7.png)
 
-![DatavizRox](https://user-images.githubusercontent.com/97997051/150529554-05429dbb-3106-4502-81fd-b568f2d02644.PNG)
+![Dash2](https://user-images.githubusercontent.com/97997051/150529750-c3059d69-a99e-4471-9479-a5c708ea12c0.PNG)
 
 
