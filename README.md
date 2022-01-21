@@ -11,7 +11,7 @@
     * [Item 3](#Item-3)
     * [Item 4](#Item-4)
     * [Item 5](#Item-5)
-  * [GCP]
+  * GCP
     * [Cloud Function](#Cloud-Function)
     * [Cloud Storage](#Cloud-Storage)
     * [Cloud Scheduler](#Cloud-Scheduler)
